@@ -6,13 +6,16 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class UrlClickCountReducer extends Reducer<Text, IntWritable, Text, IntWritable>{
+public class UrlClickCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected void reduce(Text arg0, Iterable<IntWritable> arg1, org.apache.hadoop.mapreduce.Reducer.Context arg2)
+	protected void reduce(Text key, Iterable<IntWritable> values, org.apache.hadoop.mapreduce.Reducer.Context context)
 			throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
-		super.reduce(arg0, arg1, arg2);
+		int clickCount = 0;
+		for (IntWritable value : values) {
+			clickCount += value.get();
+		}
+		context.write(key, new IntWritable(clickCount));
 	}
 
 }
